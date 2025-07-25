@@ -1,0 +1,6 @@
+@LuftBornTask.APIs_HostAddress = http://localhost:5030
+
+GET {{LuftBornTask.APIs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
