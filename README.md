@@ -44,7 +44,7 @@ LuftBornTask-BE/          --> ASP.NET Core Web API (Backend)
 ### 🌐 Frontend (Angular Standalone App)
 
 #### 📍 Prerequisites:
-- [Node.js 18+](https://nodejs.org/)
+- [Node.js 20+]
 - Angular CLI:
   ```bash
   npm install -g @angular/cli
