@@ -2,10 +2,9 @@ import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { ProductService } from "../../services/product.service";
 import { AuthService } from "@auth0/auth0-angular";
+import { ProductService } from "../Services/product.service";
 
-// ... same imports
 @Component({
   selector: 'app-product-manager',
   standalone: true,
@@ -20,23 +19,37 @@ export class ProductManagerComponent implements OnInit {
   constructor(private productService: ProductService, public auth: AuthService) {}
 
   ngOnInit(): void {
-    debugger;
     this.loadProducts();
   }
+
   logout() {
     this.auth.logout({
       logoutParams: {
         returnTo: window.location.origin
       }
-    });  }
+    });
+  }
+
   getEmptyProduct() {
-    return { id: null, name: '', price: null };
+    return {
+      id: null,
+      name: '',
+      price: null,
+      quantity: null,
+      description: ''
+    };
   }
 
   loadProducts() {
     this.productService.getAll().subscribe({
-      next: data => {      debugger;
-        this.products = data},
+      next: (res) => {
+        if (res.success) {
+          this.products = res.data ?? [];
+        } else {
+          console.log(res.errors?.[0]);
+          this.showToast(res.errors?.[0] || 'Failed to load products', 'danger');
+        }
+      },
       error: () => this.showToast('Failed to load products', 'danger')
     });
   }
@@ -47,10 +60,14 @@ export class ProductManagerComponent implements OnInit {
       : this.productService.create(this.product);
 
     action.subscribe({
-      next: () => {
-        this.loadProducts();
-        this.clearForm();
-        this.showToast('Product saved!', 'success');
+      next: (res) => {
+        if (res.success) {
+          this.loadProducts();
+          this.clearForm();
+          this.showToast('Product saved!', 'success');
+        } else {
+          this.showToast(res.errors?.[0] || 'Failed to save product', 'danger');
+        }
       },
       error: () => this.showToast('Failed to save product', 'danger')
     });
@@ -63,9 +80,13 @@ export class ProductManagerComponent implements OnInit {
   confirmDelete(id: string) {
     if (confirm('Are you sure you want to delete this product?')) {
       this.productService.delete(id).subscribe({
-        next: () => {
-          this.loadProducts();
-          this.showToast('Product deleted!', 'success');
+        next: (res) => {
+          if (res.success) {
+            this.loadProducts();
+            this.showToast('Product deleted!', 'success');
+          } else {
+            this.showToast(res.errors?.[0] || 'Failed to delete product', 'danger');
+          }
         },
         error: () => this.showToast('Failed to delete product', 'danger')
       });

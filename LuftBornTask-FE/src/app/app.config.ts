@@ -1,8 +1,9 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAuth0 } from '@auth0/auth0-angular';
 import { routes } from './app.routes';
+import { AuthInterceptor } from './Core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,19 +16,8 @@ export const appConfig: ApplicationConfig = {
         redirect_uri: window.location.origin,
         audience: 'https://localhost:7188',
         scope: 'openid profile email'
-      },
-      httpInterceptor: {
-        allowedList: [
-          {
-            uri: 'https://localhost:7188/secure/*',
-            tokenOptions: {
-              authorizationParams: {
-                audience: 'https://localhost:7188'
-              }            
-            }
-          }
-        ]
-      }
-    })
+      }}),
+      { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+
   ]
 };

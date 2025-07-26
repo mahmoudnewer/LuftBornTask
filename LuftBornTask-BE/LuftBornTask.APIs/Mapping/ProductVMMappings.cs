@@ -16,6 +16,17 @@ namespace LuftBornTask.APIs.Mapping
                 Description = vm.Description
             };
         }
+        public static ProductResponseVM ToResponseVM(this ProductDto dto)
+        {
+            return new ProductResponseVM
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Price = dto.Price,
+                Quantity = dto.Quantity,
+                Description = dto.Description
+            };
+        }
 
         public static ApiResponseVM<ProductResponseVM> ToApiResponseVM(this ProductDto dto, int statusCode = 200 ,List<string> errors = null)
         {

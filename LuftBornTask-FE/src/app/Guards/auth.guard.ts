@@ -9,12 +9,11 @@ export const authGuard: CanActivateFn = () => {
 
   return auth.isAuthenticated$.pipe(
     tap((loggedIn) => {
-        debugger;
         auth.getAccessTokenSilently().subscribe(token => {
             console.log('ACCESS TOKEN:', token);
           });
       if (!loggedIn) {
-        auth.loginWithRedirect({ appState: { target: window.location.pathname } });
+        router.navigate(['/login']);
       }
     }),
     map((loggedIn) => loggedIn)

@@ -10,3 +10,4 @@ export class AuthService {
     window.location.href = 'https://localhost:7188/auth/logout';
   }
 }
+//If I want to delegate the authorization process to the be

@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './auth.guard';
-import { ProductManagerComponent } from './products/product-manager/product-manager.component';
-import { LoginComponent } from './Auth/login/login.component';
+import { authGuard } from './Guards/auth.guard';
+import { ProductManagerComponent } from './Features/Products/Components/product-manager.component';
+import { LoginComponent } from './Features/Auth/Login/login.component';
+
 
 export const routes: Routes = [
     { path: 'products', component: ProductManagerComponent, canActivate: [authGuard] },
