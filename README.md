@@ -118,7 +118,7 @@ All API responses follow this format:
 
 ## 💡 Notes
 
-- Ensure both frontend and backend run on HTTPS.
+- Ensure both frontend and backend run on HTTPS and on Microsot edge to avoid any configuration issues.
 - CORS is enabled to allow Angular frontend to call the backend.
 - Protect routes using `AuthGuard` on the frontend and `[Authorize]` on the backend.
 
