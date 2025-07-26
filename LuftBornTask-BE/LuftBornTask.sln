@@ -13,13 +13,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LuftBornTask.Presentation",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LuftBornTask.Infrastructure", "LuftBornTask.Infrastructure", "{ECB94B69-B04D-476B-A505-B7E479D58649}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuftBornTask.APIs", "LuftBornTask.APIs\LuftBornTask.APIs.csproj", "{77D85340-B759-4772-B6C1-BF5962ED49E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuftBornTask.APIs", "LuftBornTask.APIs\LuftBornTask.APIs.csproj", "{77D85340-B759-4772-B6C1-BF5962ED49E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuftBornTask.Application", "LuftBornTask.Application\LuftBornTask.Application.csproj", "{9D298CD1-6329-43F4-967D-A34666DE3B52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuftBornTask.Application", "LuftBornTask.Application\LuftBornTask.Application.csproj", "{9D298CD1-6329-43F4-967D-A34666DE3B52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuftBornTask.Domain", "LuftBornTask.Domain\LuftBornTask.Domain.csproj", "{7D05D6EF-A46F-41CD-8F97-12DAD9CAA1E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuftBornTask.Domain", "LuftBornTask.Domain\LuftBornTask.Domain.csproj", "{7D05D6EF-A46F-41CD-8F97-12DAD9CAA1E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuftBornTask.Infrastructure", "LuftBornTask.Infrastructure\LuftBornTask.Infrastructure.csproj", "{087D613E-DA09-4515-9A9F-404241090E0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuftBornTask.Infrastructure", "LuftBornTask.Infrastructure\LuftBornTask.Infrastructure.csproj", "{087D613E-DA09-4515-9A9F-404241090E0B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LuftBornTask.DI", "LuftBornTask.DI", "{3A9C4E51-6851-403C-BD0B-271E7F1F3F4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuftBornTask.DI", "LuftBornTask.DI\LuftBornTask.DI.csproj", "{FE1CB3EF-50A9-4AC5-AB99-575BA3FC8B06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +47,10 @@ Global
 		{087D613E-DA09-4515-9A9F-404241090E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{087D613E-DA09-4515-9A9F-404241090E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{087D613E-DA09-4515-9A9F-404241090E0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE1CB3EF-50A9-4AC5-AB99-575BA3FC8B06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE1CB3EF-50A9-4AC5-AB99-575BA3FC8B06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE1CB3EF-50A9-4AC5-AB99-575BA3FC8B06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE1CB3EF-50A9-4AC5-AB99-575BA3FC8B06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +62,7 @@ Global
 		{9D298CD1-6329-43F4-967D-A34666DE3B52} = {147203A5-3198-40A8-9F85-9E7CE4638198}
 		{7D05D6EF-A46F-41CD-8F97-12DAD9CAA1E7} = {C989803A-BFAF-4F78-B85C-2752F0F3A736}
 		{087D613E-DA09-4515-9A9F-404241090E0B} = {ECB94B69-B04D-476B-A505-B7E479D58649}
+		{FE1CB3EF-50A9-4AC5-AB99-575BA3FC8B06} = {3A9C4E51-6851-403C-BD0B-271E7F1F3F4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1C8FD9D2-CC18-407A-A988-4EBA45873C5F}

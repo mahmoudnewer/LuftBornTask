@@ -4,6 +4,8 @@ using LuftBornTask.Application.Interfaces.Repository;
 using LuftBornTask.Application.Interfaces.Services;
 using LuftBornTask.Application.Interfaces.UnitOfWork;
 using LuftBornTask.Application.Mapping;
+using LuftBornTask.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace LuftBornTask.Infrastructure.Implementation.Services
 {
@@ -19,30 +21,62 @@ namespace LuftBornTask.Infrastructure.Implementation.Services
 
         public async Task<ProductDto> AddProductAsync(ProductDto productDto)
         {
-            var ProductEntity = productDto.ToEntity();
-            await _productRepository.AddAsync(ProductEntity);
+            if (string.IsNullOrWhiteSpace(productDto.Name))
+                throw new InvalidOperationException("Product name cannot be empty.");
+
+            if (productDto.Price <= 0)
+                throw new InvalidOperationException("Product price must be greater than 0.");
+
+            if (productDto.Quantity <= 0)
+                throw new InvalidOperationException("Product quantity must be greater than 0.");
+
+            bool isNameTaken = await _productRepository.AnyAsync(
+                p => p.Name.ToLower() == productDto.Name.ToLower());
+
+            if (isNameTaken)
+                throw new InvalidOperationException($"A product with the name '{productDto.Name}' already exists.");
+
+            var productEntity = productDto.ToEntity();
+            productEntity.CreatedAt = DateTimeOffset.UtcNow;
+
+            await _productRepository.AddAsync(productEntity);
             await _unitOfWork.SaveChangesAsync();
-            return productDto;
+
+            return productEntity.ToDto(); 
         }
 
         public async Task<bool> DeleteProductAsync(Guid id)
         {
             var product = await _productRepository.GetByIdAsync(id);
-            var result =  _productRepository.Delete(product);
-            if (result)
+            if (product == null)
             {
-                await _unitOfWork.SaveChangesAsync();
+                throw new KeyNotFoundException("Product not found");
             }
-            else 
-            {
-                throw new Exception("Error happened when deleting the product");
-            }
+            _productRepository.Delete(product);
+            await _unitOfWork.SaveChangesAsync();
             return true;
         }
 
-        public Task<List<ProductDto>> GetFilteredAndPagedProductsAsync(ProductFilterDto productFilterDto)
+        public async Task<PaginatedResponseDto<ProductDto>> GetFilteredAndPagedProductsAsync(ProductFilterDto productFilterDto)
         {
-            throw new NotImplementedException();
+            Expression<Func<Product, bool>> predicate = product =>
+                (string.IsNullOrEmpty(productFilterDto.Name) || product.Name.ToLower().Contains(productFilterDto.Name.ToLower())) &&
+                (!productFilterDto.Price.HasValue || product.Price == productFilterDto.Price);
+
+            var (products, totalCount) = await _productRepository.GetFilteredAdPagedAsync(
+                predicate,
+                productFilterDto.pageNumber,
+                productFilterDto.pageSize);
+
+            var dtoList = products.Select(p => p.ToDto()).ToList();
+
+            return new PaginatedResponseDto<ProductDto>
+            {
+                Items = dtoList,
+                TotalCount = totalCount,
+                PageNumber = productFilterDto.pageNumber,
+                PageSize = productFilterDto.pageSize
+            };
         }
 
         public async Task<ProductDto> GetProductByIdAsync(Guid id)
@@ -63,17 +97,31 @@ namespace LuftBornTask.Infrastructure.Implementation.Services
             {
                 var isNameTaken = await _productRepository.AnyAsync(p => p.Name.ToLower() == modifiedProduct.Name.ToLower() && p.Id != id);
                 if (isNameTaken)
-                    throw new InvalidOperationException($"A project with the name '{modifiedProduct.Name}' already exists.");
+                    throw new InvalidOperationException($"A product with the name '{modifiedProduct.Name}' already exists.");
                 dpProduct.Name = modifiedProduct.Name;
+            }
+            else 
+            {
+                throw new InvalidOperationException("Product name cannot be empty.");
             }
             if (modifiedProduct.Price > 0)
             {
                 dpProduct.Price = modifiedProduct.Price;
             }
+            else
+            {
+                throw new InvalidOperationException("Product price cannot be 0 or less.");
+            }
             if (modifiedProduct.Quantity > 0)
             {
-                dpProduct.Price = modifiedProduct.Price;
+                dpProduct.Quantity = modifiedProduct.Quantity;
             }
+            else 
+            {
+                throw new InvalidOperationException("Product Quantity cannot be 0 or less.");
+            }
+            dpProduct.UpdatedAt = DateTimeOffset.UtcNow;
+            await _unitOfWork.SaveChangesAsync();
             return modifiedProduct;
 
         }
@@ -81,10 +129,6 @@ namespace LuftBornTask.Infrastructure.Implementation.Services
         public async Task<List<ProductDto>> GetAllProductsAsync()
         {
             var products = await _productRepository.GetAllAsync();
-            if (products == null)
-            {
-                throw new KeyNotFoundException("Product not found");
-            }
             return products.Select(p=>p.ToDto()).ToList();
         }
     }

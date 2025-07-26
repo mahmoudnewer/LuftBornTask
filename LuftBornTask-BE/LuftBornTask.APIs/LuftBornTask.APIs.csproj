@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LuftBornTask.DI\LuftBornTask.DI.csproj" />
     <ProjectReference Include="..\LuftBornTask.Infrastructure\LuftBornTask.Infrastructure.csproj" />
   </ItemGroup>
 

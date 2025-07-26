@@ -8,7 +8,7 @@ namespace LuftBornTask.Application.Interfaces.Services
         Task<List<ProductDto>> GetAllProductsAsync();
 
         Task<ProductDto> GetProductByIdAsync(Guid id);
-        Task<List<ProductDto>> GetFilteredAndPagedProductsAsync(ProductFilterDto productFilterDto);
+        Task<PaginatedResponseDto<ProductDto>> GetFilteredAndPagedProductsAsync(ProductFilterDto productFilterDto);
         Task<ProductDto> AddProductAsync(ProductDto productDto);
         Task<bool> DeleteProductAsync(Guid id);
         Task<ProductDto> UpdateProductAsync(Guid id,ProductDto modifiedProduct);

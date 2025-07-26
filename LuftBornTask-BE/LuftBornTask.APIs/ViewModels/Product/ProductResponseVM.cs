@@ -1,6 +1,6 @@
-﻿namespace LuftBornTask.APIs.ViewModels
+﻿namespace LuftBornTask.APIs.ViewModels.Product
 {
-    public class ProductRequestVM
+    public class ProductResponseVM
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

@@ -1,13 +1,8 @@
 
-using LuftBornTask.Infrastructure.Implementation.Services;
-using LuftBornTask.Infrastructure.Implementation.Repository;
-using LuftBornTask.Application.Interfaces.Services;
-using LuftBornTask.Application.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
 using LuftBornTask.Infrastructure.Context;
-using LuftBornTask.Application.Interfaces.UnitOfWork;
-using LuftBornTask.Infrastructure.Implementation.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using LuftBornTask.DI;
 
 namespace LuftBornTask.APIs
 {
@@ -17,26 +12,27 @@ namespace LuftBornTask.APIs
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            DependencyInjection.AddDependencyInjection(builder.Services, builder.Configuration);
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddScoped<IProductRepository, ProductEFRepo>();
-            builder.Services.AddScoped<IProductService, OrdinaryProductService>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
             //this is only the configuration needed whe working with apis and spa 
+            var jwtSettings = builder.Configuration.GetSection("Jwt");
+            var authority = jwtSettings["Authority"];
+            var audience = jwtSettings["Audience"];
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = "https://dev-rwd7fqhnvxkbfppi.us.auth0.com/";
-                    options.Audience = "https://localhost:7188"; 
-                });
+                    .AddJwtBearer(options =>
+                    {
+                        options.Authority = authority;
+                        options.Audience = audience; 
+                    });
 
 
             //this commented configuration is dealt with when using apps as mvc, u must install mMicrosoft.OpenIdConnect library
@@ -69,20 +65,23 @@ namespace LuftBornTask.APIs
 
             //    options.ClaimsIssuer = "Auth0";
             //});
+            var configs = builder.Configuration.GetSection("Configs");
+            var origin = configs["Origin"];
 
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularApp", policy =>
                 {
-                    policy.WithOrigins("https://localhost:4200") 
+                    policy.WithOrigins(origin) 
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials(); 
                 });
             });
             var app = builder.Build();
+
             using(var scope = app.Services.CreateScope())
-{
+            {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 try
                 {

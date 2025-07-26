@@ -19,10 +19,9 @@ namespace LuftBornTask.Infrastructure.Implementation.Repository
             await _context.AddAsync(product);
         }
 
-        public bool Delete(Product product)
+        public void Delete(Product product)
         {
             _context.Products.Remove(product);
-            return true;
         }
 
         public async Task<Product> GetByIdAsync(Guid id)
@@ -34,7 +33,7 @@ namespace LuftBornTask.Infrastructure.Implementation.Repository
             return await _context.Products.ToListAsync();
         }
 
-        public async Task<(IEnumerable<Product> products, int totalCount)> GetFilteredAdPagedAsync(Expression<Func<Product, bool>>? predicate, int pageNumber, int pageSize)
+        public async Task<(List<Product> products, int totalCount)> GetFilteredAdPagedAsync(Expression<Func<Product, bool>>? predicate, int pageNumber, int pageSize)
         {
             var query = _context.Products.AsQueryable();
             if (predicate != null)
